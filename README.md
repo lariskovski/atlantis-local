@@ -127,6 +127,14 @@ gh pr create --title "Atlantis" -b " " -R github.com/lariskovski/atlantis-poc
 open https://github.com/lariskovski/atlantis-poc/pulls
 ```
 
+### Removing Lock
+
+```sh
+open $URL
+```
+
+Click on the lock and remove it.
+
 ## Troubleshooting
 
 - Verify ngrok tunnel is active and accessible
