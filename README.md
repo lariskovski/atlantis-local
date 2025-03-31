@@ -2,6 +2,20 @@
 
 This repository demonstrates setting up Atlantis for Terraform automation with GitHub integration.
 
+## Table of Contents
+
+- [Prerequisites](#prerequisites)
+- [Install Atlantis 0.32](#install-atlantis-032)
+  - [Why version 0.32?](#why-version-032)
+- [Setup Steps](#setup-steps)
+  - [1. ngrok Configuration](#1-ngrok-configuration)
+  - [2. Webhook Configuration](#2-webhook-configuration)
+  - [3. GitHub Access Token](#3-github-access-token)
+  - [4. Start Atlantis](#4-start-atlantis)
+- [Verification](#verification)
+- [Troubleshooting](#troubleshooting)
+- [Additional Resources](#additional-resources)
+
 ## Prerequisites
 
 Ensure the following tools are installed on your system. You can use Homebrew for installation:
