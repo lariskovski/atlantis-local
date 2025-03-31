@@ -120,11 +120,16 @@ running git clone --depth=1 --branch lariskovski-patch-1 --single-branch https:/
 
 ## Verification
 
-1. Check Atlantis is running:
-   ```bash
-   curl ${URL}
-   ```
-2. Create a pull request with Terraform changes to test the setup
+Create a pull request with Terraform changes to test the setup.
+
+```
+git checkout -b atlantis-test
+echo " " >> main.tf
+git add main.tf
+git commit -m "add change to trigger atlantis"
+gh pr create --title "testing atlantis" -b " " -R github.com/lariskovski/atlantis-poc
+open https://github.com/lariskovski/atlantis-poc/pull/9
+```
 
 ## Troubleshooting
 
