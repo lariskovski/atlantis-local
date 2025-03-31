@@ -1,6 +1,8 @@
 # Atlantis POC
 
-This repository demonstrates setting up Atlantis for Terraform automation with GitHub integration.
+This repository demonstrates setting up Atlantis locally for Terraform automation with GitHub integration.
+
+When there is a PR to change our Terraform files, GitHub sends a message to Atlantis through the repository's webhook, notifying it. Since we are running Atlantis locally, we need ngrok to expose our endpoint to the internet so GitHub's events can reach it. Atlantis, in turn, will comment on the PR with the plan, and we can decide whether to apply the configurations.
 
 ## Table of Contents
 
@@ -16,7 +18,7 @@ This repository demonstrates setting up Atlantis for Terraform automation with G
 
 ## Prerequisites
 
-Run the prereqs script to install the tools needed to complete the steps below:
+Run the `prereqs.sh` script to install the tools needed to complete the steps below:
 
 ```bash
 chmod +x ./prereqs.sh
@@ -27,21 +29,20 @@ chmod +x ./prereqs.sh
 
 ### 1. ngrok Configuration
 
-1. [Sign up](https://dashboard.ngrok.com/signup) or login to ngrok.
-2. Copy your auth token from the dashboard.
+1. [Sign up](https://dashboard.ngrok.com/signup) or log in to ngrok.
+2. Copy your auth token from the dashboard and enable the static domain feature.
 3. Start the ngrok proxy on port 4141:
    ```bash
    ngrok http 4141
    ```
-4. Get your public URL from the [ngrok endpoints dashboard](https://dashboard.ngrok.com/endpoints).
-5. Export the URL:
+4. Export the URL (replace `your-static-domain` with your actual ngrok domain):
    ```bash
-   export URL=https://your-unique-id.ngrok-free.app
+   export URL=https://your-static-domain.ngrok-free.app
    ```
 
 ### 2. Webhook Configuration
 
-1. Generate a webhook secret:
+1. Generate a webhook secret. This will be configured on GitHub's webhook so that when GitHub calls Atlantis, it knows the request is authentic:
    ```bash
    export SECRET=$(pwgen -Bs 20 1)
    ```
@@ -75,7 +76,7 @@ chmod +x ./prereqs.sh
 
 ### 4. Start Atlantis
 
-1. Set required environment variables:
+1. Set the required environment variables:
    ```bash
    export GH_USERNAME=$(git config user.name)
    export REPO_ALLOWLIST="github.com/$GH_USERNAME/atlantis-poc"
@@ -103,7 +104,7 @@ chmod +x ./prereqs.sh
    open https://$REPO_ALLOWLIST/pulls
    ```
 
-2. Check Atlantis is running:
+2. Check that Atlantis is running:
    ```bash
    curl ${URL}
    ```
