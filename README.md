@@ -39,7 +39,7 @@ Ensure the following tools are installed on your system. You can use Homebrew fo
 
 ```sh
 ❯ wget https://github.com/runatlantis/atlantis/releases/download/v0.32.0/atlantis_darwin_amd64.zip
-Salvando em: “atlantis_darwin_amd64.zip”
+Saving to: “atlantis_darwin_amd64.zip”
 ❯ tar -xvf atlantis_darwin_amd64.zip
 ❯ mv atlantis /usr/local/bin
 ❯ atlantis version
@@ -58,13 +58,13 @@ running git clone --depth=1 --branch lariskovski-patch-1 --single-branch https:/
 
 ### 1. ngrok Configuration
 
-1. [Sign up](https://dashboard.ngrok.com/signup) or login to ngrok
-2. Copy your auth token from the dashboard
+1. [Sign up](https://dashboard.ngrok.com/signup) or login to ngrok.
+2. Copy your auth token from the dashboard.
 3. Start the ngrok proxy on port 4141:
    ```bash
    ngrok http 4141
    ```
-4. Get your public URL from the [ngrok endpoints dashboard](https://dashboard.ngrok.com/endpoints)
+4. Get your public URL from the [ngrok endpoints dashboard](https://dashboard.ngrok.com/endpoints).
 5. Export the URL:
    ```bash
    export URL=https://your-unique-id.ngrok-free.app
@@ -77,20 +77,28 @@ running git clone --depth=1 --branch lariskovski-patch-1 --single-branch https:/
    export SECRET=$(pwgen -Bs 20 1)
    ```
 
-2. Add webhook to Github repository:
-
-```sh
-gh api \
-  --method POST \
-  -H "Accept: application/vnd.github+json" \
-  -H "X-GitHub-Api-Version: 2022-11-28" \
-  /repos/lariskovski/atlantis-poc/hooks \
-   -f "name=web" -F "active=true" -f "events[]=issue_comment" -f "events[]=push" -f "events[]=pull_request" -f "events[]=pull_request_review" -f "config[url]=$URL/events" -f "config[secret]=$SECRET" -f "config[content_type]=json" -f "config[insecure_ssl]=0"
-```
+2. Add a webhook to your GitHub repository using the GitHub CLI:
+   ```bash
+   gh api \
+     --method POST \
+     -H "Accept: application/vnd.github+json" \
+     -H "X-GitHub-Api-Version: 2022-11-28" \
+     /repos/lariskovski/atlantis-poc/hooks \
+     -f "name=web" \
+     -f "active=true" \
+     -f "events[]=issue_comment" \
+     -f "events[]=push" \
+     -f "events[]=pull_request" \
+     -f "events[]=pull_request_review" \
+     -f "config[url]=$URL/events" \
+     -f "config[secret]=$SECRET" \
+     -f "config[content_type]=json" \
+     -f "config[insecure_ssl]=0"
+   ```
 
 ### 3. GitHub Access Token
 
-1. Create a Personal Access Token with `repo` scope
+1. Create a Personal Access Token with the `repo` scope.
 2. Export the token:
    ```bash
    export TOKEN="your-github-token"
@@ -116,30 +124,34 @@ gh api \
 
 ## Verification
 
-Create a pull request with Terraform changes to test the setup.
+1. Create a pull request with Terraform changes to test the setup:
+   ```bash
+   git checkout -b atlantis-test-$(pwgen -Bs 5 1)
+   echo " " >> main.tf
+   git add main.tf
+   git commit -m "add change to trigger atlantis"
+   gh pr create --title "Atlantis" -b " " -R github.com/lariskovski/atlantis-poc
+   open https://github.com/lariskovski/atlantis-poc/pulls
+   ```
 
-```
-git checkout -b atlantis-test-$(pwgen -Bs 5 1)
-echo " " >> main.tf
-git add main.tf
-git commit -m "add change to trigger atlantis"
-gh pr create --title "Atlantis" -b " " -R github.com/lariskovski/atlantis-poc
-open https://github.com/lariskovski/atlantis-poc/pulls
-```
+2. Check Atlantis is running:
+   ```bash
+   curl ${URL}
+   ```
 
 ### Removing Lock
 
-```sh
+If a lock is created, open the Atlantis dashboard:
+```bash
 open $URL
 ```
-
 Click on the lock and remove it.
 
 ## Troubleshooting
 
-- Verify ngrok tunnel is active and accessible
-- Confirm webhook deliveries in GitHub repository settings
-- Check Atlantis server logs for any errors
+- Verify the ngrok tunnel is active and accessible.
+- Confirm webhook deliveries in GitHub repository settings.
+- Check Atlantis server logs for any errors.
 
 ## Additional Resources
 
