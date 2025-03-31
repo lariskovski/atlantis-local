@@ -119,12 +119,12 @@ gh api \
 Create a pull request with Terraform changes to test the setup.
 
 ```
-git checkout -b atlantis-test
+git checkout -b atlantis-test-$(pwgen -Bs 5 1)
 echo " " >> main.tf
 git add main.tf
 git commit -m "add change to trigger atlantis"
-gh pr create --title "testing atlantis" -b " " -R github.com/lariskovski/atlantis-poc
-open https://github.com/lariskovski/atlantis-poc/pull/9
+gh pr create --title "Atlantis" -b " " -R github.com/lariskovski/atlantis-poc
+open https://github.com/lariskovski/atlantis-poc/pulls
 ```
 
 ## Troubleshooting
