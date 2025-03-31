@@ -5,8 +5,6 @@ This repository demonstrates setting up Atlantis for Terraform automation with G
 ## Table of Contents
 
 - [Prerequisites](#prerequisites)
-- [Install Atlantis 0.32](#install-atlantis-032)
-  - [Why version 0.32?](#why-version-032)
 - [Setup Steps](#setup-steps)
   - [1. ngrok Configuration](#1-ngrok-configuration)
   - [2. Webhook Configuration](#2-webhook-configuration)
@@ -18,40 +16,11 @@ This repository demonstrates setting up Atlantis for Terraform automation with G
 
 ## Prerequisites
 
-Ensure the following tools are installed on your system. You can use Homebrew for installation:
+Run the prereqs script to install the tools needed to complete the steps below:
 
-1. **ngrok**: Used to expose local servers to the internet securely.
-   ```bash
-   brew install ngrok
-   ```
-
-2. **pwgen**: A utility for generating secure random passwords.
-   ```bash
-   brew install pwgen
-   ```
-
-3. **wget**: A command-line tool for downloading files from the web (if not already installed).
-   ```bash
-   brew install wget
-   ```
-
-### Install Atlantis 0.32
-
-```sh
-❯ wget https://github.com/runatlantis/atlantis/releases/download/v0.32.0/atlantis_darwin_amd64.zip
-Saving to: “atlantis_darwin_amd64.zip”
-❯ tar -xvf atlantis_darwin_amd64.zip
-❯ mv atlantis /usr/local/bin
-❯ atlantis version
-atlantis 0.32.0 (commit: ea838ac) (build date: 2024-12-20T02:50:43Z)
-```
-
-#### Why version 0.32?
-
-Atlantis v 0.33 (brew's default version) throws an error:
-
-```sh
-running git clone --depth=1 --branch lariskovski-patch-1 --single-branch https://larissa:<redacted>@github.com/lariskovski/atlantis-poc.git /Users/larissa/.atlantis/repos/lariskovski/atlantis-poc/3/default: : exec: "git": executable file not found in $PATH
+```bash
+chmod +x ./prereqs.sh
+./prereqs.sh
 ```
 
 ## Setup Steps
@@ -108,15 +77,15 @@ running git clone --depth=1 --branch lariskovski-patch-1 --single-branch https:/
 
 1. Set required environment variables:
    ```bash
-   export USERNAME="your-github-username"
-   export REPO_ALLOWLIST="github.com/your-username/atlantis-poc"
+   export GH_USERNAME=$(git config user.name)
+   export REPO_ALLOWLIST="github.com/$GH_USERNAME/atlantis-poc"
    ```
 
 2. Start the Atlantis server:
    ```bash
    atlantis server \
      --atlantis-url="$URL" \
-     --gh-user="$USERNAME" \
+     --gh-user="$GH_USERNAME" \
      --gh-token="$TOKEN" \
      --gh-webhook-secret="$SECRET" \
      --repo-allowlist="$REPO_ALLOWLIST"
@@ -130,8 +99,8 @@ running git clone --depth=1 --branch lariskovski-patch-1 --single-branch https:/
    echo " " >> main.tf
    git add main.tf
    git commit -m "add change to trigger atlantis"
-   gh pr create --title "Atlantis" -b " " -R github.com/lariskovski/atlantis-poc
-   open https://github.com/lariskovski/atlantis-poc/pulls
+   gh pr create --title "Atlantis" -b " " -R $REPO_ALLOWLIST
+   open https://$REPO_ALLOWLIST/pulls
    ```
 
 2. Check Atlantis is running:
