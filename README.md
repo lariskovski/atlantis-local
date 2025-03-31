@@ -77,20 +77,16 @@ running git clone --depth=1 --branch lariskovski-patch-1 --single-branch https:/
    export SECRET=$(pwgen -Bs 20 1)
    ```
 
-2. Add webhook to your GitHub repository:
-   - Navigate to: Repository Settings > Webhooks > Add webhook
-   - Configure the following:
-     ```
-     Payload URL: ${URL}/events
-     Content type: application/json
-     Secret: <your-generated-secret>
-     ```
-   - Select individual events:
-     - Pull request reviews
-     - Pushes
-     - Issue comments
-     - Pull requests
-   - Ensure webhook is Active
+2. Add webhook to Github repository:
+
+```sh
+gh api \
+  --method POST \
+  -H "Accept: application/vnd.github+json" \
+  -H "X-GitHub-Api-Version: 2022-11-28" \
+  /repos/lariskovski/atlantis-poc/hooks \
+   -f "name=web" -F "active=true" -f "events[]=issue_comment" -f "events[]=push" -f "events[]=pull_request" -f "events[]=pull_request_review" -f "config[url]=$URL/events" -f "config[secret]=$SECRET" -f "config[content_type]=json" -f "config[insecure_ssl]=0"
+```
 
 ### 3. GitHub Access Token
 
@@ -141,4 +137,4 @@ open https://github.com/lariskovski/atlantis-poc/pull/9
 
 - [Atlantis Documentation](https://www.runatlantis.io/docs/)
 - [Testing Locally Guide](https://www.runatlantis.io/guide/testing-locally.html)
-- [GitHub Webhooks Documentation](https://docs.github.com/en/webhooks)
+- [GitHub Webhooks Documentation](https://docs.github.com/en/rest/repos/webhooks?apiVersion=2022-11-28#create-a-repository-webhook)
