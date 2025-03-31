@@ -4,12 +4,40 @@ This repository demonstrates setting up Atlantis for Terraform automation with G
 
 ## Prerequisites
 
-Install required tools using Homebrew:
+Ensure the following tools are installed on your system. You can use Homebrew for installation:
 
-```bash
-brew install atlantis
-brew install ngrok
-brew install pwgen
+1. **ngrok**: Used to expose local servers to the internet securely.
+   ```bash
+   brew install ngrok
+   ```
+
+2. **pwgen**: A utility for generating secure random passwords.
+   ```bash
+   brew install pwgen
+   ```
+
+3. **wget**: A command-line tool for downloading files from the web (if not already installed).
+   ```bash
+   brew install wget
+   ```
+
+### Install Atlantis 0.32
+
+```sh
+❯ wget https://github.com/runatlantis/atlantis/releases/download/v0.32.0/atlantis_darwin_amd64.zip
+Salvando em: “atlantis_darwin_amd64.zip”
+❯ tar -xvf atlantis_darwin_amd64.zip
+❯ mv atlantis /usr/local/bin
+❯ atlantis version
+atlantis 0.32.0 (commit: ea838ac) (build date: 2024-12-20T02:50:43Z)
+```
+
+#### Why version 0.32?
+
+Atlantis v 0.33 (brew's default version) throws an error:
+
+```sh
+running git clone --depth=1 --branch lariskovski-patch-1 --single-branch https://larissa:<redacted>@github.com/lariskovski/atlantis-poc.git /Users/larissa/.atlantis/repos/lariskovski/atlantis-poc/3/default: : exec: "git": executable file not found in $PATH
 ```
 
 ## Setup Steps
