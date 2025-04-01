@@ -1,4 +1,4 @@
-# Atlantis POC
+# Atlantis Local
 
 This repository demonstrates setting up Atlantis locally for Terraform automation with GitHub integration.
 
@@ -53,7 +53,7 @@ chmod +x ./prereqs.sh
      --method POST \
      -H "Accept: application/vnd.github+json" \
      -H "X-GitHub-Api-Version: 2022-11-28" \
-     /repos/lariskovski/atlantis-poc/hooks \
+     /repos/lariskovski/atlantis-local/hooks \
      -f "name=web" \
      -f "active=true" \
      -f "events[]=issue_comment" \
@@ -79,7 +79,7 @@ chmod +x ./prereqs.sh
 1. Set the required environment variables:
    ```bash
    export GH_USERNAME=$(git config user.name)
-   export REPO_ALLOWLIST="github.com/$GH_USERNAME/atlantis-poc"
+   export REPO_ALLOWLIST="github.com/$GH_USERNAME/atlantis-local"
    ```
 
 2. Start the Atlantis server:
